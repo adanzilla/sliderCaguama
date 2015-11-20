@@ -15,17 +15,29 @@
 
 .slider .slider-contenedor .slide {
 	list-style-type: none;
-	height: 280px;
+	height: 250px;
 	float: left;
 	color: white;
 	margin: 0px;
 	padding: 0px;
 	text-align: center;
-	border: 1px solid red;
+	position: relative;
+	background-size: cover;
+	overflow: hidden;
+}
+.slider .slider-contenedor .slide div.detalle{
+	position: absolute;
+	width: 100%;
+	bottom: -63px;
+	left: 0px;
+	background-color: black;
+	display: none;
 }
 
-.slider .slider-contenedor .slide img{
-	height: 80%; 
+.slider .slider-contenedor .slide div.detalle span{
+	display: block;
+	width: 100%;
+	text-align: center;
 }
 
 .slider .atras{
@@ -54,4 +66,22 @@
 	/* text-indent: -9999em; */
 	text-decoration: none;
 	z-index: 3;
+}
+
+br.clear{
+	clear: both;
+	margin: 0;
+	padding: 0;
+}
+.mensaje_error{
+	position: absolute;
+	top: -25px;
+	left: 0px;
+	width: 100%;
+	text-align: center;
+	height: 25px;
+	background-color: red;
+	color: white;
+	font-size: 17px;
+	z-index: 300;
 }
