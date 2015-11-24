@@ -70,7 +70,7 @@ function slides($modo){
                 );
             $posts_array = get_posts( $args );
 
-            if ( count($posts_array) > 0 ){
+            if ( count($posts_array) >= 3 ){
                 return true;
             }
             else{
