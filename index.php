@@ -10,7 +10,7 @@ Description: Slider responsive con imagenes DESDE MEDIA WORDPRESS
 
 
 function necesarios() {
-    
+
 }
 
 function necesarios_front() {
@@ -21,14 +21,15 @@ function necesarios_front() {
 }
 
 function mensaje_error($mensaje){
-    echo '<script type="text/javascript">
-            jQuery(document).ready(function(){
-                var mensaje_error = "<div class=\"mensaje_error\"><h2>'.$mensaje.'</h2></div>";
-                jQuery("body").prepend(mensaje_error);
-                jQuery(".mensaje_error").animate({"top":"0px"},1000).delay(5000).animate({"top":"-25px"});
-            });
-            
-        </script>';
+    $error = '<script type="text/javascript">
+                    jQuery(document).ready(function(){
+                        var mensaje_error = "<div class=\"mensaje_error\"><p>'.$mensaje.'</p><br class=\"clear\"></div>";
+                        jQuery("body").prepend(mensaje_error);
+                        jQuery(".mensaje_error").animate({"top":"0px"},1000).delay(5000).animate({"top":"-25px"});
+                    });
+
+                </script>';
+    return $error;
 }
 
 add_action('wp_head','necesarios_front' );
@@ -50,22 +51,44 @@ function menu_slider_caguama(){
  * @return string
  */
 function slider($atts, $content = null){
-     if ( slides( 'imagenes-count' ) ) {
-        return slides( 'imagenes-li' );
-     }
-     else{
-        mensaje_error('Además de agregar el shortcode, agrega imágenes desde el administrador');
-     }
+
+    extract( shortcode_atts( array(
+        'modo' => 'normal'
+        ), $atts, 'slider' ) );
+
+    if ( slides( 'cantidad' ) ) {
+
+        if ( $modo == 'normal' ){
+           $slides = slides( 'li-fondo-imagen' ); 
+        }
+        else{
+            $slides = slides( 'li-imagen' );
+        }
+
+        $html = '<div class="slider '.$modo.'">
+                    <span class="atras"></span>
+                    <span class="adelante"></span>
+                    <ul class="slider-contenedor">
+                        '.$slides.'
+                    </ul>
+                </div>';
+        
+    }
+    else{
+        $html = mensaje_error('Además de agregar el shortcode, agrega imágenes desde el administrador');
+    }
+
+    return $html;
 }
 
 add_shortcode( 'slider', 'slider' );    
 
 function slides($modo){
     switch ($modo) {
-        case 'imagenes-count':
-             $args = array(
-                'post_type'        => 'attachment',
-                'meta_key'       => '_wp_attachment_metadata',
+        case 'cantidad':
+            $args = array(
+                'post_type'  => 'attachment',
+                'meta_key'   => '_wp_attachment_metadata',
                 'meta_value' => 'slider'
                 );
             $posts_array = get_posts( $args );
@@ -77,8 +100,9 @@ function slides($modo){
                 return false;
             }
 
-            break;
-        case 'imagenes-li':
+        break;
+
+        case 'li-imagen':
             $args = array(
                 'post_type'        => 'attachment',
                 'meta_key'       => '_wp_attachment_metadata',
@@ -86,38 +110,59 @@ function slides($modo){
                 );
             $posts_array = get_posts( $args );
             $i=1;
-            
+
             if (!empty($posts_array)) {
                 foreach ($posts_array as $post) {
-                    $slides .= '<li data-id="'.$i.'" class="slide" style="background-image: url('.$post->guid.');">
-                                    
+                    $slides .= '<li data-id="'.$i.'" class="slide">
+                                    <img src="'.$post->guid.'">
                                     <div class="detalle">
-                                        <span class="nombre">!!'.$post->post_title.'</span>
+                                        <span class="nombre">'.$post->post_title.'</span>
                                         <span class="descripcion">'.$post->post_content.'</span>
                                     </div>
                                     <br class="clear">
                                 </li>';
                     $i++;
                 }
-                $html = '<div class="slider">
-                            <span class="atras"></span>
-                            <span class="adelante"></span>
-                            <ul class="slider-contenedor">
-                                '.$slides.'
-                            </ul>
-                        </div>';
             } 
             else {
                 $html = '';
             }
-            
-            return $html;
 
+            return $slides;
             break;
-        
+
+        case 'li-fondo-imagen':
+            $args = array(
+                'post_type'        => 'attachment',
+                'meta_key'       => '_wp_attachment_metadata',
+                'meta_value' => 'slider'
+                );
+            $posts_array = get_posts( $args );
+            $i=1;
+
+            if (!empty($posts_array)) {
+                foreach ($posts_array as $post) {
+                    $slides .= '<li data-id="'.$i.'" class="slide" style="background-image: url('.$post->guid.');">
+                                    <div class="detalle">
+                                        <span class="nombre">'.$post->post_title.'</span>
+                                        <span class="descripcion">'.$post->post_content.'</span>
+                                    </div>
+                                    <br class="clear">
+                                </li>';
+                    $i++;
+                }
+            } 
+            else {
+                $html = '';
+            }
+
+            return $slides;
+
+        break;
+
         default:
             # code...
-            break;
+        break;
     }
 }
 
@@ -128,12 +173,12 @@ function slides($modo){
  */
 function dashboard_caguama(){
     $html = '<form name="form" id="form_id" action="'.plugins_url( '/sliderCaguama/php/', 'sliderCaguama' ).'carga-imagen.php" method="post" enctype="multipart/form-data">
-                <input type="text" name="nombre">
-                <input type="text" name="descripcion">
-                <input type="file" name="imagen">
-                <input type="submit" value="Cargar">
-            </form>';
-    echo $html;
+    <input type="text" name="nombre">
+    <input type="text" name="descripcion">
+    <input type="file" name="imagen">
+    <input type="submit" value="Cargar">
+</form>';
+echo $html;
 }
 
 function administrar_slider_caguama(){
