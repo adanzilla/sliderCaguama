@@ -53,21 +53,26 @@ function menu_slider_caguama(){
 function slider($atts, $content = null){
 
     extract( shortcode_atts( array(
-        'modo' => 'normal'
+        'modo' => 'normal',
+        'textos' => 1,
+        'borde' => 0,
+        'color' => '#fff'
         ), $atts, 'slider' ) );
 
     if ( slides( 'cantidad' ) ) {
 
         if ( $modo == 'normal' ){
-           $slides = slides( 'li-fondo-imagen' ); 
+           $slides = slides( 'li-fondo-imagen', $textos ); 
         }
         else{
-            $slides = slides( 'li-imagen' );
+            $slides = slides( 'li-imagen', $textos );
         }
 
-        $html = '<div class="slider '.$modo.'">
-                    <span class="atras"></span>
-                    <span class="adelante"></span>
+        $borde = ( $borde != 0 ) ?  'style="border:3px solid #'.$color.'" ' : '';
+
+        $html = '<div class="slider '.$modo.'" '.$borde.'>
+                    <span class="atras" style="background-color:#'.$color.'"></span>
+                    <span class="adelante" style="background-color:#'.$color.'"></span>
                     <ul class="slider-contenedor">
                         '.$slides.'
                     </ul>
@@ -83,7 +88,8 @@ function slider($atts, $content = null){
 
 add_shortcode( 'slider', 'slider' );    
 
-function slides($modo){
+function slides($modo,$textos){
+
     switch ($modo) {
         case 'cantidad':
             $args = array(
@@ -114,13 +120,16 @@ function slides($modo){
             if (!empty($posts_array)) {
                 foreach ($posts_array as $post) {
                     $slides .= '<li data-id="'.$i.'" class="slide">
-                                    <img src="'.$post->guid.'">
-                                    <div class="detalle">
+                                    <img src="'.$post->guid.'">';
+                    if ( $textos == '1' ){
+                        $slides .= '<div class="detalle">
                                         <span class="nombre">'.$post->post_title.'</span>
                                         <span class="descripcion">'.$post->post_content.'</span>
                                     </div>
-                                    <br class="clear">
-                                </li>';
+                                    <br class="clear">';
+                    }                
+                    
+                    $slides .=  '</li>';
                     $i++;
                 }
             } 

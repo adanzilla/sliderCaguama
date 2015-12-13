@@ -1,13 +1,13 @@
 .slider{
 	overflow: hidden;
 	position: relative;
-	min-height: 310px;
+	max-height: 310px;
 	margin: 0px 0px;
 	width: 100%;
 }
 
 .slider.full{
-	min-height: 400px;
+	max-height: 400px;
 }
 
 .slider .slider-contenedor {
@@ -20,7 +20,7 @@
 .slider.full .slider-contenedor {
 	width: 100%;
 	height: 286px;
-	margin: 30px 0px 0px 0px;
+	margin: 0px;
 	padding: 0px;
 	position: relative;
 }
@@ -75,7 +75,7 @@
 
 .slider .atras{
 	position: absolute;
-	top: 160px;
+	top: 50%;
 	left: 0px;
 	background: url('../images/atras.png') no-repeat;
 	width: 31px;
@@ -89,7 +89,7 @@
 
 .slider .adelante {
 	position: absolute;
-	top: 160px;
+	top: 50%;
 	right: 0px;
 	background: url('../images/adelante.png') no-repeat;
 	width: 31px;
@@ -106,7 +106,7 @@ br.clear{
 	margin: 0;
 	padding: 0;
 }
-.mensaje_error{
+div.mensaje_error{
 	position: absolute;
 	top: -25px;
 	left: 0px;
@@ -114,7 +114,11 @@ br.clear{
 	text-align: center;
 	height: 25px;
 	background-color: red;
+
+	z-index: 300;
+}
+
+div.mensaje_error p{
 	color: white;
 	font-size: 17px;
-	z-index: 300;
 }
